@@ -16,28 +16,30 @@ def apdrcd(r, l, C, reg, maxIter=4000, err_flag=1, time_flag=1, value_flag=1):
 
     Parameters
     ----------
-    a : ndarray, shape (ns,),
+    r : ndarray, shape (ns,),
         Source measure.
-    b : ndarray, shape (nt,),
+    l : ndarray, shape (nt,),
         Target measure.
     C : ndarray, shape (ns, nt),
         Cost matrix.
     reg : float
-        Regularization term > 0
+          Regularization term > 0
     maxIter : int
         Number of iteration.
     Returns
     -------
+    x_tilde : ndarray, shape (ns, nt),
+              Optimal Solution (Transport matrix)
     Examples
     --------
     References
     --------
     '''
 
-    # parameter
+    # parameters
     theta = 1.0
     Ck = 1.0
-    L = 4.0/reg
+    L = 4/reg
 
     # set up
     ns = r.shape[0]
@@ -45,9 +47,6 @@ def apdrcd(r, l, C, reg, maxIter=4000, err_flag=1, time_flag=1, value_flag=1):
     b = np.concatenate((r,l))
     c = C.flatten()
     H = compute_matrixH(ns,nt)
-
-    # sampling strategy
-    sampling_list = shuffle(ns,nt,maxIter)
 
     # primal (dual) variables
     x = np.zeros(ns*nt, dtype=np.float64)
@@ -58,10 +57,13 @@ def apdrcd(r, l, C, reg, maxIter=4000, err_flag=1, time_flag=1, value_flag=1):
     v = np.zeros(ns+nt, dtype=np.float64)
 
     # output
-    x_tilde = np.zeros(ns*nt)
+    x_tilde = np.zeros(ns*nt, dtype=np.float64)
     err_list = []
     time_list = []
     value_list = []
+
+    # sampling strategy
+    sampling_list = shuffle(ns,nt,maxIter)
 
     if time_flag != 0:
         tic()
