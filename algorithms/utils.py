@@ -34,20 +34,17 @@ def compute_matrixH(ns,nt):
     H = np.vstack((Hr,Hc))
     return H
 
-def creat_nonzerorow_index(H):
+def creat_nonzerorow_index(H, ns, nt):
     row, col = np.nonzero(H)
-    cols = np.sort(col)
-
-    num_nonzero = row.shape[0]
+    num_nonzero = row.shape[0] # (ns+nt)*ns
     ind = np.argsort(col)
 
-    tmp = np.zeros(num_nonzero)
+    tmp = np.zeros(num_nonzero, dtype=np.int64)
     j = 0
     for i in ind:
         tmp[j] = row[i]
         j += 1
-
-    return tmp.reshape(int(num_nonzero/2),2), col
+    return tmp.reshape(int(num_nonzero/2),2), col.reshape(ns+nt,nt)
 
 
 def negatve_entropy(x):

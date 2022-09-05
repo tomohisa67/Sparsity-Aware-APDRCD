@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 """
-APDRCD without duplicate sampling for entropy regularized ot
+Sparsity-Aware APDRCD without duplicate sampling for entropy regularized ot
 """
 # Author: T.Tabuchi
-# Date  : 2022/9/3
+# Date  : 2022/9/5
 # References: https://github.com/PythonOT/POT.git
 
 import numpy as np
 
-from algorithms.utils import compute_matrixH, shuffle, tic, toc
+from algorithms.utils import creat_nonzerorow_index, compute_matrixH, shuffle, tic, toc
 
-def apdrcd(r, l, C, reg, maxIter=4000, err_flag=1, time_flag=1, value_flag=1):
+def sa_apdrcd(r, l, C, reg, maxIter=4000, err_flag=1, time_flag=1, value_flag=1):
     r'''
-    Compute the APDRCD algorithm to solve the regularized discrete measures optimal transport problem
+    Compute the SA-APDRCD algorithm to solve the regularized discrete measures optimal transport problem
 
     Parameters
     ----------
@@ -46,6 +46,9 @@ def apdrcd(r, l, C, reg, maxIter=4000, err_flag=1, time_flag=1, value_flag=1):
     c = C.flatten()
     H = compute_matrixH(ns,nt)
 
+    # non-zero index
+    J, I = creat_nonzerorow_index(H,ns.nt)
+
     # sampling strategy
     sampling_list = shuffle(ns,nt,maxIter)
 
@@ -67,14 +70,19 @@ def apdrcd(r, l, C, reg, maxIter=4000, err_flag=1, time_flag=1, value_flag=1):
         tic()
     # main loop
     for k in range(maxIter):
-        y = (1-theta)*u + theta*v
-        x = np.exp((-c-H.T@y)/reg)
-
         j = sampling_list[k]
 
         # Hx = H[j]@x
         u[j] = y[j] - 1/L*(H[j]@x-b[j])
         v[j] = y[j] - 1/((ns+nt)*L*theta)*(H[j]@x-b[j])
+
+        y[j] = (1-theta)*u[j] + theta*v[j]
+
+        for i in I[j]:
+            x[i] = np.exp((-c[i]-H.T[i]@y)/reg)
+            # or #
+            # i1,i2 = J[i]
+            # x[i] = np.exp((-c[i]-y[i1]-y[i2])/reg)
 
         Ck = Ck + 1/theta
         theta = -theta**2 + np.sqrt(theta**4 + 4*theta**2)
