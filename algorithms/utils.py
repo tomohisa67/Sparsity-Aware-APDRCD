@@ -26,3 +26,45 @@ def toc(message='Elapsed time : {} s'):
     t = time.time()
     print(message.format(t - __time_tic_toc))
     return t - __time_tic_toc
+
+
+def compute_matrixH(ns,nt):
+    Hr = np.repeat(np.eye(ns),nt).reshape(ns,ns*nt)
+    Hc = np.tile(np.eye(nt),ns)
+    H = np.vstack((Hr,Hc))
+    return H
+
+def creat_nonzerorow_index(H):
+    row, col = np.nonzero(H)
+    cols = np.sort(col)
+
+    num_nonzero = row.shape[0]
+    ind = np.argsort(col)
+
+    tmp = np.zeros(num_nonzero)
+    j = 0
+    for i in ind:
+        tmp[j] = row[i]
+        j += 1
+
+    return tmp.reshape(int(num_nonzero/2),2), col
+
+
+def negatve_entropy(x):
+    n = x.shape[0]
+    s = 0
+    for i in range(n):
+        s = - x[i] * (np.log(x[i]) - 1)
+    return s
+
+
+def shuffle(ns,nt,maxIter):
+    sampling_list = []
+    M = int(maxIter/(ns+nt))
+    if maxIter%(ns+nt) != 0:
+        M += 1
+    for i in range(M):
+        tmp = np.arange(ns+nt)
+        np.random.shuffle(tmp)
+        sampling_list.append(tmp)
+    return sampling_list
