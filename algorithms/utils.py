@@ -7,7 +7,7 @@ Various useful functions
 # Date  : 2022/9/3
 # References: https://github.com/PythonOT/POT.git
 
-from functools import reduce
+# from functools import reduce
 import time
 
 import numpy as np
@@ -24,7 +24,7 @@ def tic():
 def toc(message='Elapsed time : {} s'):
     r""" Python implementation of Matlab toc() function """
     t = time.time()
-    print(message.format(t - __time_tic_toc))
+    # print(message.format(t - __time_tic_toc))
     return t - __time_tic_toc
 
 
@@ -51,7 +51,7 @@ def negatve_entropy(x):
     n = x.shape[0]
     s = 0
     for i in range(n):
-        s = - x[i] * (np.log(x[i]) - 1)
+        s += - x[i] * (np.log(x[i]) - 1)
     return s
 
 
@@ -63,5 +63,14 @@ def shuffle(ns,nt,maxIter):
     for i in range(M):
         tmp = np.arange(ns+nt)
         np.random.shuffle(tmp)
-        sampling_list.append(tmp)
+        sampling_list = np.concatenate([sampling_list, tmp])
+    return sampling_list
+
+def cyclic(ns,nt,maxIter):
+    tmp = maxIter%(ns+nt)
+    if tmp != 0:
+        sampling_list = np.tile(np.arange(ns+nt), int(maxIter/(ns+nt)), dtype=np.int64)
+        sampling_list = np.concatenate([sampling_list, np.arange(tmp, dtype=np.int64)])
+    else:
+        sampling_list = np.tile(np.arange(ns+nt), int(maxIter/(ns+nt)), dtype=np.int64)
     return sampling_list

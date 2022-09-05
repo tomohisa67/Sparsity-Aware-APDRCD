@@ -35,9 +35,9 @@ def apdrcd(r, l, C, reg, maxIter=4000, err_flag=1, time_flag=1, value_flag=1):
     '''
 
     # parameter
-    theta = 1
-    Ck = 1
-    L = 4/reg
+    theta = 1.0
+    Ck = 1.0
+    L = 4.0/reg
 
     # set up
     ns = r.shape[0]
@@ -50,12 +50,12 @@ def apdrcd(r, l, C, reg, maxIter=4000, err_flag=1, time_flag=1, value_flag=1):
     sampling_list = shuffle(ns,nt,maxIter)
 
     # primal (dual) variables
-    x = np.zeros(ns*nt)
-    y = np.zeros(ns+nt)
+    x = np.zeros(ns*nt, dtype=np.float64)
+    y = np.zeros(ns+nt, dtype=np.float64)
 
     # auxiliary dual variables
-    u = np.zeros(ns+nt)
-    v = np.zeros(ns+nt)
+    u = np.zeros(ns+nt, dtype=np.float64)
+    v = np.zeros(ns+nt, dtype=np.float64)
 
     # output
     x_tilde = np.zeros(ns*nt)
@@ -71,6 +71,7 @@ def apdrcd(r, l, C, reg, maxIter=4000, err_flag=1, time_flag=1, value_flag=1):
         x = np.exp((-c-H.T@y)/reg)
 
         j = sampling_list[k]
+        j = int(j)
 
         # Hx = H[j]@x
         u[j] = y[j] - 1/L*(H[j]@x-b[j])
