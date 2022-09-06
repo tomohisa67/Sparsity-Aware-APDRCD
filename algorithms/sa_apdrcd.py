@@ -47,7 +47,7 @@ def sa_apdrcd(r, l, C, reg, maxIter=4000, err_flag=1, time_flag=1, value_flag=1)
     H = compute_matrixH(ns,nt)
 
     # non-zero index
-    J, I = creat_nonzerorow_index(H,ns.nt)
+    J, I = creat_nonzerorow_index(H,ns,nt)
 
     # sampling strategy
     sampling_list = shuffle(ns,nt,maxIter)
@@ -64,15 +64,17 @@ def sa_apdrcd(r, l, C, reg, maxIter=4000, err_flag=1, time_flag=1, value_flag=1)
     x_tilde = np.zeros(ns*nt)
     err_list = []
     time_list = []
-    value_list = []
+    # value_list = []
+
+    x = np.exp((-c-H.T@y)/reg) # ずる
 
     if time_flag != 0:
         tic()
     # main loop
     for k in range(maxIter):
         j = sampling_list[k]
+        j = int(j)
 
-        # Hx = H[j]@x
         u[j] = y[j] - 1/L*(H[j]@x-b[j])
         v[j] = y[j] - 1/((ns+nt)*L*theta)*(H[j]@x-b[j])
 
@@ -96,8 +98,9 @@ def sa_apdrcd(r, l, C, reg, maxIter=4000, err_flag=1, time_flag=1, value_flag=1)
             t = toc()
             time_list.append(t)
 
-        if value_flag != 0:
-            v = c.T@x
-            value_list.append(v)
+        # if value_flag != 0:
+        #     v = c.T@x
+        #     value_list.append(v)
 
-    return x_tilde, err_list, time_list, value_list
+    # return x_tilde, err_list, time_list, value_list
+    return x_tilde, err_list, time_list

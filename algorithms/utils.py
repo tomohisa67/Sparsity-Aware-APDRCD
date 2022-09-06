@@ -66,6 +66,7 @@ def shuffle(ns,nt,maxIter):
         sampling_list = np.concatenate([sampling_list, tmp])
     return sampling_list
 
+
 def cyclic(ns,nt,maxIter):
     tmp = maxIter%(ns+nt)
     if tmp != 0:
@@ -74,3 +75,24 @@ def cyclic(ns,nt,maxIter):
     else:
         sampling_list = np.tile(np.arange(ns+nt), int(maxIter/(ns+nt)), dtype=np.int64)
     return sampling_list
+
+
+def greedy(ns,nt,grad_phi):
+    gmax = 0
+    for j in range(ns+nt):
+        tmp = np.abs(grad_phi[j])
+        if tmp > gmax:
+            gmax = tmp
+            update_j = j
+    return update_j
+
+
+def minibatch(ns,nt,batch_size):
+    tmp = np.arange(ns+nt)
+    np.random.shuffle(tmp)
+    m_list = tmp[0:batch_size]
+    return m_list
+
+
+def block(ns,nt,block_size):
+    return 
