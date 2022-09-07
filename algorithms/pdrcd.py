@@ -3,14 +3,14 @@
 APDRCD without duplicate sampling for entropy regularized ot
 """
 # Author: T.Tabuchi
-# Date  : 2022/9/3
+# Date  : 2022/9/7
 # References: https://github.com/PythonOT/POT.git
 
 import numpy as np
 
 from algorithms.utils import compute_matrixH, shuffle, tic, toc
 
-def apdrcd(r, l, C, reg, maxIter, err_flag=1, time_flag=1, value_flag=1):
+def pdrcd(r, l, C, reg, maxIter, err_flag=1, time_flag=1, value_flag=1):
     r'''
     Compute the APDRCD algorithm to solve the regularized discrete measures optimal transport problem
 
@@ -52,10 +52,6 @@ def apdrcd(r, l, C, reg, maxIter, err_flag=1, time_flag=1, value_flag=1):
     x = np.zeros(ns*nt)
     y = np.zeros(ns+nt)
 
-    # auxiliary dual variables
-    u = np.zeros(ns+nt)
-    v = np.zeros(ns+nt)
-
     # output
     x_tilde = np.zeros(ns*nt)
     err_list = []
@@ -69,18 +65,12 @@ def apdrcd(r, l, C, reg, maxIter, err_flag=1, time_flag=1, value_flag=1):
         tic()
     # main loop
     for k in range(maxIter):
-        y = (1-theta)*u + theta*v
-        x = np.exp((-c+H.T@y)/reg)
+        x = np.exp((-c-H.T@y)/reg)
 
         j = sampling_list[k]
         j = int(j)
 
-        u[j] = y[j] + 1/L*(H[j]@x-b[j])
-        v[j] = y[j] + 1/((ns+nt)*L*theta)*(H[j]@x-b[j])
-
-        Ck = Ck + 1/theta
-        theta = -theta**2 + np.sqrt(theta**4 + 4*theta**2)
-        x_tilde = 1/Ck*(x_tilde + x/theta)
+        y[j] = y[j] - 1/L*(b[j]-H[j]@x)
 
         if err_flag != 0:
             err = np.linalg.norm(H@x-b, ord=1)
@@ -94,4 +84,4 @@ def apdrcd(r, l, C, reg, maxIter, err_flag=1, time_flag=1, value_flag=1):
             value = c.T@x
             value_list.append(value)
 
-    return x_tilde, err_list, time_list, value_list
+    return x, err_list, time_list, value_list

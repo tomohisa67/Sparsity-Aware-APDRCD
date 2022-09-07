@@ -10,7 +10,7 @@ import numpy as np
 
 from algorithms.utils import creat_nonzerorow_index, compute_matrixH, shuffle, tic, toc
 
-def sa_apdrcd(r, l, C, reg, maxIter=4000, err_flag=1, time_flag=1, value_flag=1):
+def sa_apdrcd(r, l, C, reg, maxIter, err_flag=1, time_flag=1, value_flag=1):
     r'''
     Compute the SA-APDRCD algorithm to solve the regularized discrete measures optimal transport problem
 
@@ -64,9 +64,9 @@ def sa_apdrcd(r, l, C, reg, maxIter=4000, err_flag=1, time_flag=1, value_flag=1)
     x_tilde = np.zeros(ns*nt)
     err_list = []
     time_list = []
-    # value_list = []
+    value_list = []
 
-    x = np.exp((-c-H.T@y)/reg) # ずる
+    x = np.exp((-c-H.T@y)/reg)
 
     if time_flag != 0:
         tic()
@@ -98,9 +98,8 @@ def sa_apdrcd(r, l, C, reg, maxIter=4000, err_flag=1, time_flag=1, value_flag=1)
             t = toc()
             time_list.append(t)
 
-        # if value_flag != 0:
-        #     v = c.T@x
-        #     value_list.append(v)
+        if value_flag != 0:
+            value = c.T@x
+            value_list.append(value)
 
-    # return x_tilde, err_list, time_list, value_list
-    return x_tilde, err_list, time_list
+    return x_tilde, err_list, time_list, value_list
