@@ -92,8 +92,12 @@ ax3.set_ylabel("ot_value")
 plt.show()
 
 X = np.reshape(x1, [ns,nt])
+X2 = np.reshape(x2, [ns,nt])
+X3 = np.reshape(x3, [ns,nt])
 
 X_round = round_transpoly(X,r,l)
+X2_round = round_transpoly(X2,r,l)
+X3_round = round_transpoly(X3,r,l)
 
 # tt = T.flatten()
 # H = compute_matrixH(ns,nt)
@@ -113,18 +117,36 @@ X_round = round_transpoly(X,r,l)
 
 fig1 = plt.figure()
 
-ax1 = fig1.add_subplot(2, 2, 1)
-ax2 = fig1.add_subplot(2, 2, 2)
-ax3 = fig1.add_subplot(2, 2, 3)
-ax4 = fig1.add_subplot(2, 2, 4)
+ax1 = fig1.add_subplot(2, 4, 1)
+ax2 = fig1.add_subplot(2, 4, 2)
+ax3 = fig1.add_subplot(2, 4, 3)
+ax4 = fig1.add_subplot(2, 4, 4)
 
-ax1.imshow(X)
-ax1.set_title("X")
-ax2.imshow(X_round)
-ax2.set_title("X_round")
-ax3.imshow(T)
-ax3.set_title("Sinkhorn")
-ax4.set_title("ground_truth")
+ax5 = fig1.add_subplot(2, 4, 5)
+ax6 = fig1.add_subplot(2, 4, 6)
+ax7 = fig1.add_subplot(2, 4, 7)
+ax8 = fig1.add_subplot(2, 4, 8)
+
+ax1.set_title("Sinkhorn")
+ax1.imshow(T)
+T_round = round_transpoly(T,r,l)
+ax5.imshow(T_round)
+ax5.set_title("Sinkhorn (round)")
+
+ax2.set_title("original")
+ax2.imshow(X)
+ax6.set_title("original (round)")
+ax6.imshow(X_round)
+
+ax3.set_title("sparsity-aware")
+ax3.imshow(X2)
+ax7.set_title("sparsity-aware (round)")
+ax7.imshow(X2_round)
+
+ax4.set_title("pdrcd")
+ax4.imshow(X3)
+ax8.set_title("pdrcd (round)")
+ax8.imshow(X3_round)
 
 plt.show()
 

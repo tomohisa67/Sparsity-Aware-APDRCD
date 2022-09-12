@@ -55,6 +55,15 @@ def negatve_entropy(x):
     return s
 
 
+def compute_marginal_err(T,r,l,flag=0):
+    r_T = np.sum(T,1)
+    l_T = np.sum(T,0)
+    marginal_err = np.linalg.norm(r_T-r,ord=1) + np.linalg.norm(l_T-l,ord=1)
+    if flag != 0:
+        print("$||r_T-r||_1 + ||l_T-l||_1$ = {}".format(marginal_err))
+    return marginal_err
+
+
 def shuffle(ns,nt,maxIter):
     sampling_list = []
     M = int(maxIter/(ns+nt))

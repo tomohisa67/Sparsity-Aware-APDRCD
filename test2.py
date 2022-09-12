@@ -1,7 +1,7 @@
 from algorithms.apdrcd import apdrcd
-from algorithms.sa_apdrcd import sa_apdrcd
-from algorithms.pdrcd import pdrcd
-from algorithms.round_transpoly import round_transpoly
+# from algorithms.sa_apdrcd import sa_apdrcd
+# from algorithms.pdrcd import pdrcd
+from algorithms.round_transpoly import round_transpoly, round_transpoly2
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -11,9 +11,8 @@ import matplotlib.pyplot as plt
 
 import ot
 from ot.plot import plot1D_mat
-from ot.lp import wasserstein_1d
 
-from algorithms.utils import compute_matrixH
+from algorithms.utils import compute_marginal_err
 
 
 n = 100
@@ -106,7 +105,15 @@ ax8 = fig1.add_subplot(2, 4, 8)
 
 ax1.set_title("Sinkhorn")
 ax1.imshow(T)
+T_round = round_transpoly(T,r,l)
+ax5.imshow(T_round)
 ax5.set_title("Sinkhorn (round)")
+
+# # check marginal error
+# marginal_err = compute_marginal_err(T,r,l)
+# print("$||r_T-r||_1 + ||l_T-l||_1$ = {}".format(marginal_err))
+# marginal_err = compute_marginal_err(T_round,r,l)
+# print("$||r_T-r||_1 + ||l_T-l||_1$ = {}".format(marginal_err))
 
 X = np.reshape(x[0], [ns,nt])
 X_round = round_transpoly(X,r,l)
@@ -114,6 +121,12 @@ ax2.imshow(X)
 ax2.set_title("X : $\eta$ = {}".format(reg[0]))
 ax6.imshow(X_round)
 ax6.set_title("X_round: $\eta$ = {}".format(reg[0]))
+
+# check marginal error
+# marginal_err = compute_marginal_err(X,r,l,flag=1)
+# marginal_err = compute_marginal_err(X_round,r,l,flag=1)
+
+round_transpoly2(X,r,l)
 
 X = np.reshape(x[0], [ns,nt])
 X_round = round_transpoly(X,r,l)
@@ -130,3 +143,4 @@ ax8.imshow(X_round)
 ax8.set_title("X_round: $\eta$ = {}".format(reg[2]))
 
 plt.show()
+
