@@ -70,13 +70,13 @@ def apdrcd(r, l, C, reg, maxIter, err_flag=1, time_flag=1, value_flag=1):
     # main loop
     for k in range(maxIter):
         y = (1-theta)*u + theta*v
-        x = np.exp((-c+H.T@y)/reg)
+        x = np.exp((-c-H.T@y)/reg)
 
         j = sampling_list[k]
         j = int(j)
 
-        u[j] = y[j] + 1/L*(H[j]@x-b[j])
-        v[j] = y[j] + 1/((ns+nt)*L*theta)*(H[j]@x-b[j])
+        u[j] = y[j] - 1/L*(H[j]@x-b[j])
+        v[j] = y[j] - 1/((ns+nt)*L*theta)*(H[j]@x-b[j])
 
         Ck = Ck + 1/theta
         theta = -theta**2 + np.sqrt(theta**4 + 4*theta**2)
