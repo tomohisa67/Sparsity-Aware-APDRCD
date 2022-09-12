@@ -36,22 +36,26 @@ T = ot.sinkhorn(r, l, C, 1)
 
 plot1D_mat(r,l,C)
 
-eta = 1
+reg = 1
 maxIter = 4000
 
-x1 = np.zeros(ns*nt)
-x2 = np.zeros(ns*nt)
+# x1 = np.zeros(ns*nt)
+# x2 = np.zeros(ns*nt)
+# x3 = np.zeros(ns*nt)
 ii = np.arange(maxIter)
-err1 = []
-err2 = []
-time1 = []
-time2 = []
-ot1 = []
-ot2 = []
+# err1 = []
+# err2 = []
+# err3 = []
+# time1 = []
+# time2 = []
+# time3 = []
+# ot1 = []
+# ot2 = []
+# ot3 = []
 
-x1, err1, time1, ot1 = apdrcd(r, l, C, eta, maxIter, err_flag=1, time_flag=1, value_flag=1)
-x2, err2, time2, ot2 = sa_apdrcd(r, l, C, eta, maxIter, err_flag=1, time_flag=1, value_flag=1)
-x3, err3, time3, ot3 = pdrcd(r, l, C, eta, maxIter, err_flag=1, time_flag=1, value_flag=1)
+x1, err1, time1, ot1 = apdrcd(r, l, C, reg, maxIter, err_flag=1, time_flag=1, value_flag=1)
+x2, err2, time2, ot2 = sa_apdrcd(r, l, C, reg, maxIter, err_flag=1, time_flag=1, value_flag=1)
+x3, err3, time3, ot3 = pdrcd(r, l, C, reg, maxIter, err_flag=1, time_flag=1, value_flag=1)
 ot_loss = wasserstein_1d(r,l) ###################################################################### LP solver に変更する
 ot_loss = np.tile(ot_loss, maxIter)
 
@@ -119,6 +123,9 @@ ax1.set_title("X")
 ax2.imshow(X_round)
 ax2.set_title("X_round")
 ax3.imshow(T)
-ax3.set_title("T")
+ax3.set_title("Sinkhorn")
+ax4.set_title("ground_truth")
 
 plt.show()
+
+print("err1 = {}".format(err1[3999]))
