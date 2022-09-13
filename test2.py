@@ -6,13 +6,10 @@ from algorithms.round_transpoly import round_transpoly, round_transpoly2
 import numpy as np
 import matplotlib.pyplot as plt
 
-# import sys
-# import os
-
 import ot
 from ot.plot import plot1D_mat
 
-from algorithms.utils import compute_marginal_err
+# from algorithms.utils import compute_marginal_err
 
 
 n = 100
@@ -35,7 +32,7 @@ T = ot.sinkhorn(r, l, C, 1)
 
 plot1D_mat(r,l,C)
 
-reg = [1,5,9]
+reg = [0.01,0.1,1]
 maxIter = 4000
 
 x = np.array([])
@@ -122,25 +119,23 @@ ax2.set_title("X : $\eta$ = {}".format(reg[0]))
 ax6.imshow(X_round)
 ax6.set_title("X_round: $\eta$ = {}".format(reg[0]))
 
-# check marginal error
-# marginal_err = compute_marginal_err(X,r,l,flag=1)
-# marginal_err = compute_marginal_err(X_round,r,l,flag=1)
-
-round_transpoly2(X,r,l)
-
-X = np.reshape(x[0], [ns,nt])
+X = np.reshape(x[1], [ns,nt])
 X_round = round_transpoly(X,r,l)
 ax3.imshow(X)
 ax3.set_title("X : $\eta$ = {}".format(reg[1]))
 ax7.imshow(X_round)
 ax7.set_title("X_round: $\eta$ = {}".format(reg[1]))
 
-X = np.reshape(x[0], [ns,nt])
+X = np.reshape(x[2], [ns,nt])
 X_round = round_transpoly(X,r,l)
 ax4.imshow(X)
 ax4.set_title("X : $\eta$ = {}".format(reg[2]))
 ax8.imshow(X_round)
 ax8.set_title("X_round: $\eta$ = {}".format(reg[2]))
+
+# check marginal error
+# marginal_err = compute_marginal_err(X,r,l,flag=1)
+# marginal_err = compute_marginal_err(X_round,r,l,flag=1)
 
 plt.show()
 

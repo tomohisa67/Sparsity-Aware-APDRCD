@@ -2,19 +2,16 @@ from algorithms.apdrcd import apdrcd
 from algorithms.sa_apdrcd import sa_apdrcd
 from algorithms.pdrcd import pdrcd
 from algorithms.round_transpoly import round_transpoly
+from dataset.load_data import load_mnist784
 
 import numpy as np
 import matplotlib.pyplot as plt
-
-# import sys
-# import os
 
 import ot
 from ot.plot import plot1D_mat
 from ot.lp import wasserstein_1d
 
-from algorithms.utils import compute_matrixH
-
+# from algorithms.utils import compute_marginal_err
 
 n = 100
 ns = n
@@ -32,12 +29,19 @@ scale = 1000
 C = ot.utils.dist0(n) * scale
 C /= C.max()
 
-T = ot.sinkhorn(r, l, C, 1)
+### MNIST ###
+# r,l = load_mnist784()
+# C = np.zeros((ns,nt))
+# for i in range(28):
+#     for j in range(28):
+#         C[i][j] = np.abs(i-j)
 
 plot1D_mat(r,l,C)
 
-reg = 1
+reg = 0.01
 maxIter = 4000
+
+T = ot.sinkhorn(r, l, C, 1)
 
 # x1 = np.zeros(ns*nt)
 # x2 = np.zeros(ns*nt)
@@ -149,5 +153,3 @@ ax8.set_title("pdrcd (round)")
 ax8.imshow(X3_round)
 
 plt.show()
-
-print("err1 = {}".format(err1[3999]))

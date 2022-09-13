@@ -5,3 +5,4 @@ Adaptive Primal-Dual Randomized Coordinate Descent (APDRCD) is proposed by [2020
 ## Code
 * test.py
 * test2.py : run apdrcd with varying regularization parameters. ($\eta$ = \{1,5,9\})
+* test3.py : animation of transport matrix
