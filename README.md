@@ -1,7 +1,5 @@
 # Sparsity-Aware-APDRCD
-Solver for entropy regularized optimal transport problem.
-
-研究のメモ用に作成しました。正しさは保証しません。
+Solver for entropy regularized optimal transport problem. (education)
 
 Adaptive Primal-Dual Randomized Coordinate Descent (APDRCD) is proposed by [2020 Guo].
 
